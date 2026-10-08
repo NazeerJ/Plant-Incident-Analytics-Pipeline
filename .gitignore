@@ -1,0 +1,23 @@
+# Local Power BI caches and credentials
+**/.pbi/
+**/.localSettings.json
+**/localSettings.json
+*.abf
+*.pbix
+*.pbit
+
+# Python and editor artefacts
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+~$*.xlsx
+
+# Local exports and diagnostics
+validation-results.local.json
+*.log

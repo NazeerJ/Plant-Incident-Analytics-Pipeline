@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 960 540">
+  <defs>
+    <filter id="panel_shadow" x="-10%" y="-20%" width="120%" height="150%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="0" dy="1"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.10"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="header_shadow" x="-1%" y="-10%" width="102%" height="130%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="0.8"/>
+      <feOffset dy="0.7"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.08"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect id="canvas" width="960" height="540" fill="#F4F7FB"/>
+  <rect id="header" width="960" height="46.08" fill="#FFFFFF" filter="url(#header_shadow)"/>
+  <rect id="navigation_panel" x="723.6" y="10.08" width="102.24" height="24.48" rx="1.96" fill="#EAF3FF" filter="url(#panel_shadow)"/>
+
+  <g id="filter_panels" fill="#FFFFFF" stroke="#DDE5EF" stroke-width="0.8" filter="url(#panel_shadow)">
+    <rect id="period_filter" x="597.6" y="65.52" width="106.56" height="26.64" rx="2.13"/>
+    <rect id="plant_filter" x="713.52" y="65.52" width="80.64" height="26.64" rx="2.13"/>
+    <rect id="classification_filter" x="803.52" y="65.52" width="126.72" height="26.64" rx="2.13"/>
+  </g>
+
+  <g id="kpi_panels" fill="#FFFFFF" stroke="#DDE5EF" stroke-width="0.8" filter="url(#panel_shadow)">
+    <rect x="28.8" y="109.44" width="215.28" height="79.2" rx="6.34"/>
+    <rect x="257.76" y="109.44" width="215.28" height="79.2" rx="6.34"/>
+    <rect x="486.72" y="109.44" width="215.28" height="79.2" rx="6.34"/>
+    <rect x="715.68" y="109.44" width="215.28" height="79.2" rx="6.34"/>
+  </g>
+  <g id="kpi_dividers" fill="#E8EDF4">
+    <rect x="38.16" y="156.96" width="196.56" height="0.432"/>
+    <rect x="267.12" y="156.96" width="196.56" height="0.432"/>
+    <rect x="496.08" y="156.96" width="196.56" height="0.432"/>
+    <rect x="725.04" y="156.96" width="196.56" height="0.432"/>
+  </g>
+
+  <g id="chart_panels" fill="#FFFFFF" stroke="#DDE5EF" stroke-width="0.8" filter="url(#panel_shadow)">
+    <rect id="monthly_trend_panel" x="28.8" y="203.04" width="512.64" height="230.4" rx="18.43"/>
+    <rect id="plant_panel" x="554.4" y="203.04" width="177.84" height="230.4" rx="14.23"/>
+    <rect id="incident_mix_panel" x="745.2" y="203.04" width="185.76" height="230.4" rx="14.86"/>
+  </g>
+
+  <rect id="overview_banner" x="28.8" y="445.68" width="902.16" height="51.12" rx="4.09" fill="#EAF3FF" filter="url(#panel_shadow)"/>
+  <g id="overview_info_icon" aria-label="Information">
+    <circle cx="55.2" cy="470.4" r="10.5" fill="#1677FF" filter="url(#panel_shadow)"/>
+    <circle cx="55.2" cy="466.4" r="0.9" fill="#FFFFFF"/>
+    <path d="M55.2 470 L55.2 475" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

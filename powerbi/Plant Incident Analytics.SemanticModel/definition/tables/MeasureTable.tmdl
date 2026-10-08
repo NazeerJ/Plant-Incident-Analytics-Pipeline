@@ -1,0 +1,153 @@
+table MeasureTable
+	lineageTag: e1fc9d4c-a2fb-4495-a741-d12c39b00645
+
+	/// Incident count in the current period, plant and category filter context.
+	measure total_incidents = SUM('fact_monthly_incidents'[incident_count])
+		formatString: #,0;-#,0;0
+		displayFolder: 01 Totals
+		lineageTag: 25e608d7-0ce3-4829-96cc-62381c6840fb
+
+	/// PY means prior year: the same selected date period shifted back one year.
+	measure total_incidents_py = CALCULATE([total_incidents], SAMEPERIODLASTYEAR('Calendar'[Date]))
+		formatString: #,0;-#,0;0
+		displayFolder: 02 Prior Year
+		lineageTag: 3ddeab05-c11f-432d-b06b-a3c0a11f847e
+
+	/// Year-over-year count change. Blank when either comparison period has no data.
+	measure total_incidents_yoy_change =
+			VAR _current = [total_incidents]
+			VAR _previous = [total_incidents_py]
+			RETURN IF(NOT ISBLANK(_current) && NOT ISBLANK(_previous), _current - _previous)
+		formatString: +#,0;-#,0;0
+		displayFolder: 02 Prior Year
+		lineageTag: c58abd56-d9e6-407f-91a5-2caaa2d9f141
+
+	/// Year-over-year percentage change. Blank when the prior count is zero or missing.
+	measure total_incidents_yoy_pct = DIVIDE([total_incidents_yoy_change], [total_incidents_py])
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 02 Prior Year
+		lineageTag: 498651d8-03e3-48d7-8b38-0e82a9ce2835
+
+	/// Total for the latest available month, retaining plant and category filters.
+	measure latest_month_incidents = ```
+			
+			VAR _month = MAX('fact_monthly_incidents'[reporting_month])
+			RETURN
+			    IF(
+			        NOT ISBLANK(_month),
+			        CALCULATE(
+			            [total_incidents],
+			            REMOVEFILTERS('Calendar'),
+			            TREATAS({_month}, 'Calendar'[Date])
+			        )
+			    )
+			
+			```
+		formatString: #,0;-#,0;0
+		displayFolder: 03 Latest Month
+		lineageTag: 82eba9cb-029a-4d80-a64a-3158a67a625b
+
+	/// Month immediately before the latest selected month, even outside the date selection. Missing months stay blank.
+	measure previous_month_incidents = ```
+			
+			VAR _month = MAX('fact_monthly_incidents'[reporting_month])
+			RETURN
+			    IF(
+			        NOT ISBLANK(_month),
+			        CALCULATE(
+			            [total_incidents],
+			            REMOVEFILTERS('Calendar'),
+			            TREATAS({EDATE(_month, -1)}, 'Calendar'[Date])
+			        )
+			    )
+			
+			```
+		formatString: #,0;-#,0;0
+		displayFolder: 03 Latest Month
+		lineageTag: 2f9463c4-5e57-4217-b017-c9f7fef856d7
+
+	/// Latest month minus the preceding calendar month.
+	measure latest_month_change = ```
+			
+			VAR _current = [latest_month_incidents]
+			VAR _previous = [previous_month_incidents]
+			RETURN
+			    IF(NOT ISBLANK(_current) && NOT ISBLANK(_previous), _current - _previous)
+			
+			```
+		formatString: +#,0;-#,0;0
+		displayFolder: 03 Latest Month
+		lineageTag: 82473499-a1ff-46f0-8b75-a36b4cc69d84
+
+	/// Month-over-month percentage change; blank for a zero or missing comparison count.
+	measure latest_month_change_pct = DIVIDE([latest_month_change], [previous_month_incidents])
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 03 Latest Month
+		lineageTag: b8c141e9-6ae7-435a-8e43-00f4a46593b2
+
+	/// Factual summary of selected-period year-over-year change and latest-month change; no inferred causes.
+	measure overview_signal = ```
+			
+			VAR _total = [total_incidents]
+			VAR _py = [total_incidents_py]
+			VAR _yoy = [total_incidents_yoy_pct]
+			VAR _month = MAX('fact_monthly_incidents'[reporting_month])
+			VAR _latest = [latest_month_incidents]
+			VAR _previous = [previous_month_incidents]
+			VAR _mom = [latest_month_change_pct]
+			VAR _periodText =
+			    SWITCH(
+			        TRUE(),
+			        ISBLANK(_py), "No prior-year data is available for this selection.",
+			        _total = _py, "Total incidents are unchanged from the same period last year.",
+			        _py = 0, "Total incidents increased from zero to " & FORMAT(_total, "#,0") & " versus the same period last year.",
+			        "Total incidents are " & FORMAT(ABS(_yoy), "0.0%") &
+			            IF(_yoy < 0, " lower", " higher") & " than the same period last year."
+			    )
+			VAR _monthText =
+			    SWITCH(
+			        TRUE(),
+			        ISBLANK(_previous), "No previous-month data is available for " & FORMAT(_month, "MMM yyyy") & ".",
+			        _latest = _previous, FORMAT(_month, "MMM yyyy") & " is unchanged from the previous month.",
+			        _previous = 0, FORMAT(_month, "MMM yyyy") & " increased from zero to " & FORMAT(_latest, "#,0") & " incidents.",
+			        FORMAT(_month, "MMM yyyy") & IF(_mom < 0, " decreased by ", " increased by ") &
+			            FORMAT(ABS(_mom), "0.0%") & " versus the previous month."
+			    )
+			RETURN
+			    IF(ISBLANK(_total), "No incident data is available for the current selection.", _periodText & " " & _monthText)
+			
+			```
+		formatString: @
+		displayFolder: 04 Report Text
+		lineageTag: 6b3927b6-16cc-41b9-bc31-fff5cc1d08ff
+
+	/// Dynamic heading for the latest available month in the current selection.
+	measure latest_month_label =
+			VAR _month = MAX('fact_monthly_incidents'[reporting_month])
+			RETURN
+			    IF(
+			        NOT ISBLANK(_month),
+			        "LATEST MONTH · " & FORMAT(_month, "MMM yyyy"),
+			        "LATEST MONTH"
+			    )
+		formatString: @
+		displayFolder: 04 Report Text
+
+	column Column
+		isHidden
+		formatString: 0
+		lineageTag: 7900cef6-f6dc-4e6d-bbd8-cd6d47c0a629
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition MeasureTable = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 112b4a720f4e461eb9ee32ca3ab44762
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

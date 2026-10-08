@@ -1,0 +1,64 @@
+{
+  "packaged_on": "2026-10-08",
+  "local_validation": {
+    "status": "passed",
+    "source_rows": 48,
+    "fact_rows": 192,
+    "plants": 2,
+    "months": 24,
+    "categories": 4,
+    "total_incidents": 296,
+    "notebook_code_cells_compiled": 14,
+    "report_pages": 1,
+    "report_visuals": 47,
+    "embedded_sample_reconciled": true
+  },
+  "standalone_tmdl": {
+    "status": "passed",
+    "tables": 7,
+    "measures": 10,
+    "relationships": 4,
+    "parameter_expressions": 1
+  },
+  "power_bi_desktop": {
+    "version": "2.158.1177.0",
+    "project_opened": true,
+    "embedded_sample_refresh": "passed",
+    "excel_export_refresh": "passed",
+    "imported_partition_states": "Ready",
+    "portable_parameter_restored": true,
+    "dax_query": {
+      "fact_rows": 192,
+      "plant_rows": 2,
+      "total_incidents": 296,
+      "latest_month_incidents": 5,
+      "previous_month_incidents": 11
+    },
+    "render_review": "passed",
+    "screenshot": "assets/plant-overview.png",
+    "saved_page_selection": {
+      "year": 2020,
+      "plants": "All",
+      "classifications": "All",
+      "displayed_incidents": 157
+    }
+  },
+  "static_pbir_validation": {
+    "result": "catalog_errors_and_schema_warning",
+    "catalog_errors": 3,
+    "schema_fetch_warnings": 1,
+    "notes": [
+      "The installed catalog does not recognise the preserved dropdown formatting object on three original slicers. All three render correctly in the tested Desktop version.",
+      "The visual-container 2.13 schema could not be fetched for two containers. Full schema validation is therefore incomplete."
+    ]
+  },
+  "anonymisation": {
+    "source_branding_scan": "passed",
+    "original_connection_identifiers_absent": true,
+    "notebook_outputs_removed": true,
+    "local_caches_excluded": true
+  },
+  "markdown_links_checked": 12,
+  "fabric_execution": "not rerun during packaging; source-provided run evidence documented separately",
+  "original_pbix_unchanged": true
+}

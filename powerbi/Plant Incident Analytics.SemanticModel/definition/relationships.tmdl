@@ -1,0 +1,18 @@
+relationship a5c653a9-9dfb-4281-a022-47dab684b35a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Calendar.Date
+	toColumn: LocalDateTable_b3b4f1b9-9276-4736-b276-b32d4b08c04a.Date
+
+relationship 6741ce37-569e-4f5e-ad43-68395f13706d
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Calendar.'Today''s Date'
+	toColumn: LocalDateTable_f9617817-eb6d-452e-afac-1b295bc1db86.Date
+
+relationship AutoDetected_1a07b9ca-2821-4a84-8eb9-7f028f6ef86b
+	fromColumn: fact_monthly_incidents.plant_code
+	toColumn: dim_plant.plant_code
+
+relationship 94fdb732-a9a2-8e3f-2d7f-5d1d3ab754d7
+	fromColumn: fact_monthly_incidents.reporting_month
+	toColumn: Calendar.Date
+

@@ -1,0 +1,33 @@
+model Model
+	culture: en-GB
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-ZA
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup 'Monthly Incidents'
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["DataFolder","fact_monthly_incidents","dim_plant"]
+
+annotation __TEdtr = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table fact_monthly_incidents
+ref table DateTableTemplate_e1f2f01b-fece-40dd-b787-e83604145c32
+ref table Calendar
+ref table LocalDateTable_b3b4f1b9-9276-4736-b276-b32d4b08c04a
+ref table LocalDateTable_f9617817-eb6d-452e-afac-1b295bc1db86
+ref table dim_plant
+ref table MeasureTable
+
+ref cultureInfo en-GB
+
+
+ref expression DataFolder

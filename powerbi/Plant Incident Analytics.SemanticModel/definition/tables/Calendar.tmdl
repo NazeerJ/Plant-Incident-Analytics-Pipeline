@@ -1,0 +1,202 @@
+table Calendar
+	lineageTag: 54b61f78-b462-4443-93ac-3fde0a40afbc
+
+	column Date
+		formatString: General Date
+		lineageTag: 3a5e5d5c-ac00-4a39-84ca-30cae8cf8473
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: a5c653a9-9dfb-4281-a022-47dab684b35a
+			defaultHierarchy: LocalDateTable_b3b4f1b9-9276-4736-b276-b32d4b08c04a.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: 7c4b8ed7-fec3-4fe1-aaa0-3f4be1d80dcf
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		formatString: 0
+		lineageTag: d005b609-cd08-4318-979a-f0d76b43aa2c
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Month Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		lineageTag: 5d9e7f0b-7e41-421b-aa72-0418a9a2bd7a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name]
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Year'
+		lineageTag: 0ff4c6ac-25fd-46f5-b1bf-a3b6c5f23ff9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Year]
+		sortByColumn: 'YearMonth Sort'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'YearMonth Sort'
+		formatString: 0
+		lineageTag: 2bc002bf-425d-4f62-b94b-64b044df49b4
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [YearMonth Sort]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day
+		formatString: 0
+		lineageTag: 8505b175-d479-459f-bdc2-30378fe225fb
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Day]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day of Week Number'
+		formatString: 0
+		lineageTag: 6b397ed6-b5d9-4209-89c9-84d119b494a1
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Day of Week Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day Name'
+		lineageTag: ed687c09-3099-474c-a0fe-d3645be1aac7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Day Name]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is Weekend'
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: d418e788-2fd5-4c8b-82c4-761db959b281
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Is Weekend]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Week Number'
+		formatString: 0
+		lineageTag: fc78c3d8-f066-4f56-b215-f1832286e345
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Week Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Today''s Date'
+		formatString: General Date
+		lineageTag: 6c4a74aa-4060-4ab3-bd26-7a600799c015
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Today's Date]
+
+		variation Variation
+			isDefault
+			relationship: 6741ce37-569e-4f5e-ad43-68395f13706d
+			defaultHierarchy: LocalDateTable_f9617817-eb6d-452e-afac-1b295bc1db86.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is Last 3 Months'
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e8fd5295-eb30-46cf-be78-8b3fd749e080
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Is Last 3 Months]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is Last 6 Months'
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c7b88509-857c-4b96-a3a0-1aeb5d6b34bd
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Is Last 6 Months]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is Last 12 Months'
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 0140d954-a892-4c1c-9828-9ad84f9aa053
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Is Last 12 Months]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Calendar = calculated
+		mode: import
+		source = ```
+				
+				ADDCOLUMNS(
+				    CALENDAR ( DATE(2019, 1, 1), TODAY() ),
+				
+				    "Year", YEAR([Date]),
+				    
+				    "Month Number", MONTH([Date]),
+				    "Month Name", FORMAT([Date], "MMMM"),
+				    
+				    "Month Year", FORMAT([Date], "MMM-YY"),
+				    "YearMonth Sort", YEAR([Date]) * 100 + MONTH([Date]),
+				    
+				    "Day", DAY([Date]),
+				    
+				    "Day of Week Number", WEEKDAY([Date], 2), -- Monday = 1
+				    "Day Name", FORMAT([Date], "dddd"),
+				    
+				    "Is Weekend", IF(WEEKDAY([Date], 2) > 5, TRUE(), FALSE()),
+				    
+				    "Week Number", WEEKNUM([Date], 2),
+				    
+				    "Today's Date", TODAY(),
+				
+				    "Is Last 3 Months",
+				        [Date] >= DATE(
+				            YEAR(EDATE(TODAY(), -3)),
+				            MONTH(EDATE(TODAY(), -3)),
+				            1
+				        )
+				        && [Date] <= TODAY(),
+				
+				    "Is Last 6 Months",
+				        [Date] >= DATE(
+				            YEAR(EDATE(TODAY(), -6)),
+				            MONTH(EDATE(TODAY(), -6)),
+				            1
+				        )
+				        && [Date] <= TODAY(),
+				
+				    "Is Last 12 Months",
+				        [Date] >= DATE(
+				            YEAR(EDATE(TODAY(), -12)),
+				            MONTH(EDATE(TODAY(), -12)),
+				            1
+				        )
+				        && [Date] <= TODAY()
+				)
+				
+				```
+
+	annotation PBI_Id = c95a84a37f494f4e8f4862521291add5
+

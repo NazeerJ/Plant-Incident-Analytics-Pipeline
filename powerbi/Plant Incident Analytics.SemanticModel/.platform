@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Plant Incident Analytics"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "22b1e815-04cf-45aa-a2d3-8c4d15733e01"
+  }
+}

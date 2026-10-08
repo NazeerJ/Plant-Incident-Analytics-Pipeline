@@ -1,0 +1,35 @@
+table dim_plant
+	lineageTag: d37c0b66-c2af-4625-86a1-1f07c5cff49a
+
+	column plant_code
+		dataType: string
+		lineageTag: a865153d-7ff6-492a-9ac9-8d6da4027b93
+		summarizeBy: none
+		sourceColumn: plant_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_active
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 009479ae-a506-40fe-9a22-f5703ca4ac79
+		summarizeBy: none
+		sourceColumn: is_active
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_plant = m
+		mode: import
+		queryGroup: 'Monthly Incidents'
+		source =
+				let
+				    Sample = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WCvDxCzFS0ikpKk2N1YFwDaHcWAA=", BinaryEncoding.Base64), Compression.Deflate)), {"plant_code", "is_active"}),
+				    Source = if DataFolder = "" then Sample else Table.PromoteHeaders(Excel.Workbook(File.Contents(DataFolder & "/dim_plant.xlsx"), null, true){[Item="sheet1", Kind="Sheet"]}[Data], [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Source, {{"plant_code", type text}, {"is_active", type logical}}, "en-GB")
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
