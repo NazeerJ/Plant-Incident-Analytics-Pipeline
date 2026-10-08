@@ -8,7 +8,7 @@
 4. Check the Plant Overview page. Its all-data incident total is 296. The saved page selection may show a narrower year or plant selection; clear slicers to inspect all data.
 5. To read workbooks, use **Transform data → Manage parameters**, set `DataFolder` to the absolute directory containing `dim_plant.xlsx` and `fact_monthly_incidents.xlsx`, then apply and refresh. Both sheets must be named `sheet1`. An empty parameter uses the embedded sample.
 
-Save a PBIX from Desktop if you need a single-file distribution. The editable PBIP is supplied here for GitHub source review.
+Save a PBIX from Desktop if you need a single-file distribution. The editable PBIP is supplied here for source review.
 
 ## 2. Prepare Microsoft Fabric
 

@@ -75,16 +75,3 @@ python scripts/validate_project.py
 
 The checks compile notebook cells, validate configuration and sample grain, reconcile every exported fact row with its source, inspect report/model references and scan the package for private source metadata. GitHub Actions runs the same checks on pushes and pull requests. The Fabric notebook itself must run in Fabric.
 
-## Add to GitHub
-
-Create an empty GitHub repository named `plant-incident-analytics-pipeline`, then run these commands from this folder, replacing `YOUR_USERNAME`:
-
-```bash
-git init -b main
-git add .
-git commit -m "Add plant incident analytics pipeline portfolio project"
-git remote add origin https://github.com/YOUR_USERNAME/plant-incident-analytics-pipeline.git
-git push -u origin main
-```
-
-The project uses a generic company identity. Notebook execution outputs, original cloud connections and local Power BI caches are excluded. No licence has been assigned; choose one before inviting reuse.
